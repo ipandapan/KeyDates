@@ -26,22 +26,116 @@
                 radial-gradient(ellipse 40% 30% at 75% 100%, rgba(255,55,95,0.04) 0%, transparent 50%);
         }
 
-        .shell { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 56px 24px 64px; }
+        .shell { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 40px 24px 64px; }
 
         /* ── Header ── */
-        .header { text-align: center; margin-bottom: 48px; }
-        .header-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.9; }
+        .header {
+            text-align: center; margin-bottom: 32px;
+            padding-bottom: 28px; border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        .header-icon { font-size: 24px; margin-bottom: 10px; }
         .header-title {
-            font-size: 13px; font-weight: 600; letter-spacing: 4px;
+            font-size: 12px; font-weight: 600; letter-spacing: 4px;
             text-transform: uppercase; color: #c47a3a;
         }
-        .header-sub {
-            font-size: 11px; color: #8e8e93; margin-top: 4px; letter-spacing: 1px;
+
+        /* ── Time Bar ── */
+        .time-bar {
+            display: flex; align-items: center; justify-content: center;
+            gap: 20px; margin-top: 18px;
         }
-        .header-date {
-            font-size: 12px; color: #aeaeb2; margin-top: 14px;
+        .tb-clock {
+            font-size: 36px; font-weight: 200; color: #1c1c1e;
+            font-variant-numeric: tabular-nums; letter-spacing: 1px; line-height: 1;
+        }
+        .tb-divider {
+            width: 1px; height: 36px; background: rgba(0,0,0,0.08);
+        }
+        .tb-date { text-align: left; }
+        .tb-ymd {
+            font-size: 13px; font-weight: 400; color: #3a3a3c;
             font-variant-numeric: tabular-nums;
         }
+        .tb-weekday {
+            font-size: 11px; color: #8e8e93; margin-top: 2px; letter-spacing: 1px;
+        }
+
+        /* ── Calendar ── */
+        .calendar-wrap {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.02);
+            border: 1px solid rgba(0,0,0,0.03);
+            opacity: 0; transform: translateY(10px);
+            animation: fi .5s ease-out forwards;
+        }
+
+        .cal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .cal-nav {
+            width: 32px; height: 32px; border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.06);
+            background: #faf9f7; color: #3a3a3c;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; transition: all 0.15s;
+        }
+        .cal-nav:hover { background: #f0eff0; border-color: rgba(0,0,0,0.1); }
+        .cal-month-year {
+            font-size: 14px; font-weight: 500; color: #1c1c1e;
+        }
+
+        .cal-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+        }
+        .cal-weekday {
+            text-align: center; font-size: 9px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase;
+            color: #aeaeb2; padding: 6px 0;
+        }
+        .cal-day {
+            text-align: center; padding: 8px 0;
+            font-size: 13px; font-weight: 400; color: #3a3a3c;
+            border-radius: 8px; cursor: pointer;
+            transition: all 0.15s; position: relative;
+        }
+        .cal-day:hover { background: #f5f5f7; }
+        .cal-day.empty { cursor: default; }
+        .cal-day.empty:hover { background: none; }
+        .cal-day.today {
+            background: linear-gradient(135deg, #ff9500, #ff6b6b);
+            color: #fff; font-weight: 600;
+        }
+        .cal-day.today:hover { opacity: 0.9; }
+        .cal-day.selected {
+            background: #1c1c1e; color: #fff; font-weight: 500;
+        }
+        .cal-day.keydate {
+            position: relative;
+        }
+        .cal-day.keydate::after {
+            content: '';
+            position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+            width: 4px; height: 4px; border-radius: 50%;
+            background: #c47a3a;
+        }
+        .cal-day.today.keydate::after { background: #fff; }
+        .cal-day.other-month { color: #d1d1d6; }
+
+        /* ── Selected Date Info ── */
+        .selected-info {
+            text-align: center; padding: 12px;
+            min-height: 40px; margin-top: 12px;
+            border-top: 1px solid rgba(0,0,0,0.03);
+            font-size: 12px; color: #8e8e93;
+        }
+        .selected-info .si-date {
+            font-weight: 500; color: #3a3a3c; font-size: 13px;
+        }
+        .selected-info .si-note { margin-top: 2px; color: #c47a3a; font-weight: 500; }
 
         /* ── Cards ── */
         .cards { display: flex; flex-direction: column; gap: 10px; }
@@ -56,28 +150,26 @@
             transition: transform 0.25s ease, box-shadow 0.25s ease;
             cursor: default;
             opacity: 0; transform: translateY(12px);
-            animation: cardIn .6s ease-out forwards;
-            position: relative;
-            overflow: hidden;
+            animation: fi .6s ease-out forwards;
+            position: relative; overflow: hidden;
         }
         .card::after {
             content: '';
             position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            border-radius: 16px 16px 0 0;
-            opacity: 0.6;
+            border-radius: 16px 16px 0 0; opacity: 0.6;
         }
         .card:hover { transform: translateY(-2px); box-shadow: 0 2px 8px rgba(0,0,0,0.05), 0 12px 32px rgba(0,0,0,0.04); }
-        .card:nth-child(1) { animation-delay: .08s }
-        .card:nth-child(2) { animation-delay: .16s }
-        .card:nth-child(3) { animation-delay: .24s }
-        .card:nth-child(4) { animation-delay: .32s }
+        .card:nth-child(1) { animation-delay: .35s }
+        .card:nth-child(2) { animation-delay: .40s }
+        .card:nth-child(3) { animation-delay: .45s }
+        .card:nth-child(4) { animation-delay: .50s }
 
-        .card.coral::after  { background: linear-gradient(90deg, #ff6b6b, #ff8e8e); }
+        .card.coral::after    { background: linear-gradient(90deg, #ff6b6b, #ff8e8e); }
         .card.lavender::after { background: linear-gradient(90deg, #a78bfa, #c4b5fd); }
-        .card.amber::after  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-        .card.sage::after   { background: linear-gradient(90deg, #6ee7b7, #a7f3d0); }
+        .card.amber::after    { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .card.sage::after     { background: linear-gradient(90deg, #6ee7b7, #a7f3d0); }
 
-        @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fi { to { opacity: 1; transform: translateY(0); } }
 
         /* ── Date Circle ── */
         .date-circle {
@@ -89,7 +181,6 @@
             content: ''; position: absolute; inset: -3px;
             border-radius: 50%; opacity: 0.12;
         }
-
         .coral .date-circle   { background: #fff0f0; }
         .coral .date-circle::before { border: 2px solid #ff6b6b; }
         .lavender .date-circle { background: #f5f3ff; }
@@ -100,37 +191,24 @@
         .sage .date-circle::before { border: 2px solid #6ee7b7; }
 
         .dc-month { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
-        .dc-day { font-size: 18px; font-weight: 600; line-height: 1; margin-top: 0px; }
+        .dc-day { font-size: 18px; font-weight: 600; line-height: 1; margin-top: 0; }
+        .coral .dc-month   { color: #e04848; } .coral .dc-day   { color: #d63031; }
+        .lavender .dc-month { color: #7c3aed; } .lavender .dc-day { color: #6d28d9; }
+        .amber .dc-month   { color: #d97706; } .amber .dc-day   { color: #b45309; }
+        .sage .dc-month    { color: #059669; } .sage .dc-day    { color: #047857; }
 
-        .coral .dc-month   { color: #e04848; }
-        .coral .dc-day     { color: #d63031; }
-        .lavender .dc-month { color: #7c3aed; }
-        .lavender .dc-day   { color: #6d28d9; }
-        .amber .dc-month   { color: #d97706; }
-        .amber .dc-day     { color: #b45309; }
-        .sage .dc-month    { color: #059669; }
-        .sage .dc-day      { color: #047857; }
-
-        /* ── Info ── */
         .info { flex: 1; min-width: 0; }
         .info-title { font-size: 15px; font-weight: 500; color: #1c1c1e; }
         .info-sub { font-size: 11px; color: #8e8e93; margin-top: 2px; }
 
-        /* ── Countdown ── */
         .countdown { text-align: right; flex-shrink: 0; }
         .cd-num { font-size: 26px; font-weight: 200; font-variant-numeric: tabular-nums; line-height: 1; }
         .cd-lbl { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; }
+        .coral .cd-num   { color: #e04848; } .coral .cd-lbl   { color: #e08080; }
+        .lavender .cd-num { color: #7c3aed; } .lavender .cd-lbl { color: #a78bfa; }
+        .amber .cd-num   { color: #d97706; } .amber .cd-lbl   { color: #fbbf24; }
+        .sage .cd-num    { color: #059669; } .sage .cd-lbl    { color: #6ee7b7; }
 
-        .coral .cd-num   { color: #e04848; }
-        .coral .cd-lbl   { color: #e08080; }
-        .lavender .cd-num { color: #7c3aed; }
-        .lavender .cd-lbl { color: #a78bfa; }
-        .amber .cd-num   { color: #d97706; }
-        .amber .cd-lbl   { color: #fbbf24; }
-        .sage .cd-num    { color: #059669; }
-        .sage .cd-lbl    { color: #6ee7b7; }
-
-        /* ── Today ── */
         .card.today-card {
             border: 1.5px solid rgba(255,149,0,0.2);
             background: linear-gradient(135deg, #fff 60%, #fff8f0);
@@ -148,7 +226,6 @@
         }
         @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.4 } }
 
-        /* ── Footer ── */
         .footer {
             text-align: center; margin-top: 48px;
             font-size: 10px; color: #c7c7cc; letter-spacing: 2px; text-transform: uppercase;
@@ -159,7 +236,9 @@
             .date-circle { width: 46px; height: 46px; }
             .dc-day { font-size: 15px; }
             .cd-num { font-size: 22px; }
-            .header { margin-bottom: 36px; }
+            .time-bar { gap: 14px; }
+            .tb-clock { font-size: 28px; }
+            .cal-day { padding: 6px 0; font-size: 12px; }
         }
     </style>
 </head>
@@ -171,10 +250,28 @@
     <div class="header">
         <div class="header-icon">📌</div>
         <div class="header-title">KeyDates</div>
-        <div class="header-sub">Days that matter</div>
-        <div class="header-date" id="header-date">----/--/-- ---</div>
+        <div class="time-bar">
+            <div class="tb-clock" id="clock">--:--:--</div>
+            <div class="tb-divider"></div>
+            <div class="tb-date">
+                <div class="tb-ymd" id="ymd">----/--/--</div>
+                <div class="tb-weekday" id="weekday">---</div>
+            </div>
+        </div>
     </div>
 
+    <!-- Calendar -->
+    <div class="calendar-wrap">
+        <div class="cal-header">
+            <button class="cal-nav" id="cal-prev">‹</button>
+            <div class="cal-month-year" id="cal-title">----年--月</div>
+            <button class="cal-nav" id="cal-next">›</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="selected-info" id="selected-info"></div>
+    </div>
+
+    <!-- Key Date Cards -->
     <div class="cards" id="cards"></div>
 
     <div class="footer">KeyDates</div>
@@ -188,7 +285,29 @@
         { month: 10, day:  6, title: 'October 6',    emoji: '🍂', style: 'sage' },
     ];
 
-    const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const WEEKDAYS_ZH = ['日','一','二','三','四','五','六'];
+    const MONTHS_ZH = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+
+    // ── Time ──
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('clock').textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+        document.getElementById('ymd').textContent = now.getFullYear() + '/' + pad(now.getMonth()+1) + '/' + pad(now.getDate());
+        document.getElementById('weekday').textContent = '星期' + WEEKDAYS_ZH[now.getDay()];
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // ── Calendar ──
+    let calYear, calMonth;
+    let selectedDate = null;
+
+    function isKeyDate(m, d) {
+        return DATES.some(k => k.month === m && k.day === d);
+    }
 
     function daysUntil(m, d) {
         const now = new Date();
@@ -198,13 +317,111 @@
         return Math.round((target - today) / 86400000);
     }
 
-    function render() {
-        const now = new Date();
+    function renderCalendar() {
+        const grid = document.getElementById('cal-grid');
+        grid.innerHTML = '';
+
+        document.getElementById('cal-title').textContent = calYear + '年 ' + MONTHS_ZH[calMonth];
+
+        const WEEKDAYS_SHORT = ['日','一','二','三','四','五','六'];
+        WEEKDAYS_SHORT.forEach(w => {
+            const el = document.createElement('div');
+            el.className = 'cal-weekday';
+            el.textContent = w;
+            grid.appendChild(el);
+        });
+
+        const firstDay = new Date(calYear, calMonth, 1).getDay();
+        const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+        const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + today.getMonth() + '-' + today.getDate();
+
+        // Previous month days
+        for (let i = firstDay - 1; i >= 0; i--) {
+            const el = document.createElement('div');
+            el.className = 'cal-day other-month empty';
+            el.textContent = daysInPrev - i;
+            grid.appendChild(el);
+        }
+
+        // Current month days
+        for (let d = 1; d <= daysInMonth; d++) {
+            const el = document.createElement('div');
+            el.className = 'cal-day';
+            el.textContent = d;
+
+            const dateStr = calYear + '-' + calMonth + '-' + d;
+            const m = calMonth + 1;
+
+            if (dateStr === todayStr) el.classList.add('today');
+            if (isKeyDate(m, d)) el.classList.add('keydate');
+            if (selectedDate && selectedDate.year === calYear && selectedDate.month === calMonth && selectedDate.day === d) {
+                el.classList.add('selected');
+            }
+
+            el.addEventListener('click', () => {
+                selectedDate = { year: calYear, month: calMonth, day: d };
+                renderCalendar();
+                showSelectedInfo(m, d);
+            });
+
+            grid.appendChild(el);
+        }
+
+        // Next month days
+        const totalCells = firstDay + daysInMonth;
+        const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+        for (let d = 1; d <= remaining; d++) {
+            const el = document.createElement('div');
+            el.className = 'cal-day other-month empty';
+            el.textContent = d;
+            grid.appendChild(el);
+        }
+
+        // Show selected info or clear
+        if (selectedDate) {
+            showSelectedInfo(selectedDate.month + 1, selectedDate.day);
+        } else {
+            document.getElementById('selected-info').innerHTML = '';
+        }
+    }
+
+    function showSelectedInfo(m, d) {
+        const info = document.getElementById('selected-info');
+        const kd = DATES.find(k => k.month === m && k.day === d);
+        if (kd) {
+            const left = daysUntil(m, d);
+            const isToday = left === 0;
+            info.innerHTML = `<div class="si-date">${kd.emoji} ${kd.title}</div>` +
+                `<div class="si-note">${isToday ? '✦ Today!' : left + ' days until this day'}</div>`;
+        } else {
+            const dt = new Date(selectedDate.year, selectedDate.month, selectedDate.day);
+            info.innerHTML = `<div class="si-date">${selectedDate.year}/${pad(selectedDate.month+1)}/${pad(selectedDate.day)}  星期${WEEKDAYS_ZH[dt.getDay()]}</div>`;
+        }
+    }
+
+    document.getElementById('cal-prev').addEventListener('click', () => {
+        calMonth--;
+        if (calMonth < 0) { calMonth = 11; calYear--; }
+        renderCalendar();
+    });
+    document.getElementById('cal-next').addEventListener('click', () => {
+        calMonth++;
+        if (calMonth > 11) { calMonth = 0; calYear++; }
+        renderCalendar();
+    });
+
+    const now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth();
+    renderCalendar();
+
+    // ── Key Date Cards ──
+    function renderCards() {
         const cards = document.getElementById('cards');
         cards.innerHTML = '';
-
-        document.getElementById('header-date').textContent =
-            now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0') + '  ' + DAYS[now.getDay()];
 
         DATES.forEach(d => {
             const left = daysUntil(d.month, d.day);
@@ -236,8 +453,8 @@
         });
     }
 
-    render();
-    setInterval(render, 60000);
+    renderCards();
+    setInterval(renderCards, 60000);
 </script>
 
 </body>
