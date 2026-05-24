@@ -32,8 +32,8 @@
         .main-layout { display: grid; grid-template-columns: 320px 1fr; gap: 16px; align-items: stretch; }
 
         /* ── Cards Column ── */
-        .cards-col { display: flex; flex-direction: column; gap: 10px; }
-        .card { background: var(--card); border-radius: 14px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: default; opacity: 0; transform: translateX(-12px); animation: cardIn .5s ease-out forwards; position: relative; overflow: hidden; }
+        .cards-col { display: flex; flex-direction: column; gap: 10px; height: 100%; }
+        .card { background: var(--card); border-radius: 14px; padding: 24px 18px; flex: 1; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: default; opacity: 0; transform: translateX(-12px); animation: cardIn .5s ease-out forwards; position: relative; overflow: hidden; }
         .card::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 14px 0 0 14px; opacity: 0.7; }
         .card:hover { transform: translateX(-2px) translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.05), 0 12px 32px rgba(0,0,0,0.04); }
         .card:nth-child(1) { animation-delay: .1s } .card:nth-child(2) { animation-delay: .18s } .card:nth-child(3) { animation-delay: .26s }
@@ -62,7 +62,7 @@
         @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.4 } }
 
         /* ── Calendar ── */
-        .calendar-wrap { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); opacity: 0; transform: translateX(12px); animation: calIn .5s .2s ease-out forwards; display: flex; flex-direction: column; }
+        .calendar-wrap { background: var(--card); border-radius: 16px; padding: 20px; height: 100%; box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); opacity: 0; transform: translateX(12px); animation: calIn .5s .2s ease-out forwards; display: flex; flex-direction: column; }
         @keyframes calIn { to { opacity: 1; transform: translateX(0); } }
         .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
         .cal-nav { width: 30px; height: 30px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.06); background: #faf9f7; color: #3a3a3c; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.15s; }
